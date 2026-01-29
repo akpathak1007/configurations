@@ -27,6 +27,7 @@
     smartparens
     js2-mode
     diff-hl
+    origami
     typescript-mode
     all-the-icons-dired
     diredfl
@@ -43,6 +44,7 @@
 (dolist (pkg my-packages)
   (unless (package-installed-p pkg)
     (package-install pkg)))
+
 ;; Configuring diff-hl for magit
 (use-package diff-hl
   :hook ((prog-mode . diff-hl-mode)
@@ -53,6 +55,15 @@
   (diff-hl-margin-mode)) ;; or diff-hl-fringe-mode
 (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
 (set-face-attribute 'mode-line nil :height 1.1)
+
+;; Cofiguring
+(use-package origami
+  :ensure t
+  :hook (prog-mode . origami-mode)
+  :bind
+  ("C-+" . origami-open-node-recursively)
+  ("C-_" . origami-toggle-all-nodes))
+
 
 ;; File path in buffer
 (setq-default mode-line-buffer-identification
