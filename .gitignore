@@ -4,3 +4,7 @@ projectile-bookmarks.eld
 auto-save-list
 *~
 projects
+*#
+flycheck_init.el
+transient
+TAGS

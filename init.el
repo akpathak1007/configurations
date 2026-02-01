@@ -45,6 +45,26 @@
   (unless (package-installed-p pkg)
     (package-install pkg)))
 
+;; Copy from outside of window
+;; macOS clipboard support for Terminal Emacs
+(setq interprogram-cut-function
+      (lambda (text)
+        (with-temp-buffer
+          (insert text)
+          (call-process-region (point-min) (point-max)
+                               "pbcopy"))))
+
+(setq interprogram-paste-function
+      (lambda ()
+        (when (executable-find "pbpaste")
+          (shell-command-to-string "pbpaste"))))
+
+;; Manualy proving path for ctags
+(setq tags-revert-without-query t)
+(setq projectile-tags-command
+      "/opt/homebrew/bin/ctags -R -e -f \"%s\" %s")
+
+
 ;; Configuring diff-hl for magit
 (use-package diff-hl
   :hook ((prog-mode . diff-hl-mode)
