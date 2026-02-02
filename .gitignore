@@ -8,3 +8,6 @@ projects
 flycheck_init.el
 transient
 TAGS
+recentf
+*desktop
+*.lock

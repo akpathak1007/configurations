@@ -38,12 +38,20 @@
     eglot
     projectile
     company
+    yaml-mode
+    git-messenger 
     magit))
 
 ;; Install missing packages automatically
 (dolist (pkg my-packages)
   (unless (package-installed-p pkg)
     (package-install pkg)))
+
+;; Load yaml-mode
+(require 'yaml-mode)
+;; Automatically use yaml-mode for .yml and .yaml files
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
 
 ;; Copy from outside of window
 ;; macOS clipboard support for Terminal Emacs
@@ -76,13 +84,28 @@
 (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)
 (set-face-attribute 'mode-line nil :height 1.1)
 
+
 ;; Cofiguring
 (use-package origami
   :ensure t
   :hook (prog-mode . origami-mode)
   :bind
-  ("C-+" . origami-open-node-recursively)
-  ("C-_" . origami-toggle-all-nodes))
+  ("M-g a" . origami-recursively-toggle-node)
+  ("M-g s" . origami-toggle-all-nodes))
+
+;; Haft screen move
+(defun move-cursor-6-lines-forward ()
+  "Move cursor forward (down) by 6 lines."
+  (interactive)
+  (forward-line 6))
+
+(defun move-cursor-6-lines-backward ()
+  "Move cursor backward (up) by 6 lines."
+  (interactive)
+  (forward-line -6))
+;; Bind to C-v and M-v
+(global-set-key (kbd "C-v") #'move-cursor-6-lines-forward)
+(global-set-key (kbd "M-v") #'move-cursor-6-lines-backward)
 
 
 ;; File path in buffer
@@ -104,7 +127,7 @@
 ;;(add-hook 'dired-mode-hook #'dired-subtree-mode)
 
 
-;; Projectile project awareness
+;;  project awareness
 (use-package projectile
   :ensure t
   :init
@@ -113,9 +136,6 @@
   ("C-c p" . projectile-command-map)
   :custom
   (projectile-completion-system 'auto))
-
-
-
 
 ;; Smartparens
 (require 'smartparens-config)
@@ -149,6 +169,65 @@
           (lambda ()
             (prettier-js-mode)
             (add-hook 'before-save-hook 'prettier-js nil t)))
+
+;; Install lsp-mode (and optionally lsp-ui for nicer UI)
+(use-package lsp-mode
+  :hook ((js-mode . lsp)
+         (js2-mode . lsp)   ;; if using js2-mode
+         (typescript-mode . lsp))
+  :commands lsp)
+
+;; Optional: better UI for peek / docs
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+
+;; ----------------------------
+;; Desktop session (save buffers and window layout)
+;; ----------------------------
+(require 'desktop)
+
+;; Directory and file for desktop session
+(setq desktop-dirname             "~/.emacs.d/")
+(setq desktop-base-file-name      "emacs-desktop")
+(setq desktop-path                (list desktop-dirname))
+
+;; Save automatically on exit
+(setq desktop-save 'always)  ;; always save, even if file exists
+(setq desktop-load-locked-desktop t) ;; allow load if locked
+
+;; Git commit review pop up
+(global-set-key (kbd "C-c m") #'git-messenger:popup-message)
+
+;; Restore first N buffers eagerly
+(setq desktop-restore-eager 20)
+
+;; Restore window layout
+(setq desktop-restore-frames t)
+
+;; Ignore some buffers (optional)
+(setq desktop-buffers-not-to-save "^\\*") ;; skip special buffers
+
+;; Activate desktop save mode
+(desktop-save-mode 1)
+
+;; Optional: autosave desktop every 5 minutes
+(run-at-time "5 min" 300 'desktop-save-in-desktop-dir)
+;; Include *scratch* and other unsaved buffers
+(setq desktop-globals-to-save
+      (append '((extended-command-history . 30)
+                (file-name-history     . 100)
+                (grep-history          . 30)
+                (compile-history       . 30)
+                (query-replace-history . 30)
+                (register-alist        . 30)
+                (kill-ring             . 50)
+                (search-ring           . 30)
+                (regexp-search-ring    . 30)
+                (recentf-list          . 100)
+                (desktop-saved-buffer-name-list . 50)
+                )
+              desktop-globals-to-save))
+
 
 
 ;; UI Configuration
