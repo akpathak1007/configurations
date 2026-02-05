@@ -40,6 +40,7 @@
     company
     yaml-mode
     git-messenger 
+    multiple-cursors
     magit))
 
 ;; Install missing packages automatically
@@ -238,6 +239,18 @@
 
 ;; Optional: Variable-pitch for prose
 (set-face-attribute 'variable-pitch nil :font "SF Pro Text-16" :weight 'light)
+
+;; ABOVE IS STABLE
+;; Ignore node_modules and .webpack
+(dolist (dir '("node_modules" ".webpack"))
+  (add-to-list 'grep-find-ignored-directories dir))
+
+(require 'multiple-cursors)
+
+(global-set-key (kbd "C-c l") 'mc/edit-lines)
+(global-set-key (kbd "C-.") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-,") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-,") 'mc/mark-all-like-this)
 
 
 (custom-set-variables
