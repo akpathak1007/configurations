@@ -247,18 +247,37 @@
 
 (require 'multiple-cursors)
 
+;; Scroll one line
+(setq scroll-step 1)
+(setq scroll-conservatively 10000)
+
 (global-set-key (kbd "C-c l") 'mc/edit-lines)
 (global-set-key (kbd "C-.") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-,") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-,") 'mc/mark-all-like-this)
 
+(require 'gptel)
+
+(setq gptel-backend
+      (gptel-make-ollama
+       "Ollama"
+       :host "http://localhost:11434"
+       :models '("qwen3:14b")))
+
+(setq gptel-model "qwen3:14b")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(all-the-icons-dired company diff-hl dired-git-info dired-subtree
+			 diredfl ellama flycheck git-messenger gptel
+			 js2-mode lsp-ui magit multiple-cursors
+			 origami prettier-js projectile smartparens
+			 treemacs treesit-fold typescript-mode
+			 yaml-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
