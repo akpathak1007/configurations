@@ -261,23 +261,25 @@
 (setq gptel-backend
       (gptel-make-ollama
        "Ollama"
-       :host "http://localhost:11434"
+       :host "localhost:11434"
        :models '("qwen3:14b")))
 
 (setq gptel-model "qwen3:14b")
+
+(use-package doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-one t))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(all-the-icons-dired company diff-hl dired-git-info dired-subtree
-			 diredfl ellama flycheck git-messenger gptel
-			 js2-mode lsp-ui magit multiple-cursors
-			 origami prettier-js projectile smartparens
-			 treemacs treesit-fold typescript-mode
-			 yaml-mode)))
+ '(custom-safe-themes
+   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
+     default))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
